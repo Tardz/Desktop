@@ -30,6 +30,8 @@ git add --all
 git commit -m "commit ${new_number}"
 git push -u -f origin main
 
+
+
 if [ $? -eq 0 ]; then
   echo "{ \"number\": $new_number }" | jq . > "$json_file"
   echo "Commit successful!"
