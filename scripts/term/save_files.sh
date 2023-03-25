@@ -27,8 +27,8 @@ echo "$new_number"
 
 cd /home/jonalm/desktopgit/Desktop/
 git add --all
-git push origin master
 git commit -m "commit ${new_number}"
+git push origin master
 
 if [ $? -eq 0 ]; then
   echo "{ \"number\": $new_number }" | jq . > "$json_file"
