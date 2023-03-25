@@ -23,14 +23,10 @@ sudo cp -r /home/jonalm/.imwheelrc "$git_path"
 sudo cp -r /home/jonalm/.inputrc "$git_path"
 sudo cp -r /home/jonalm/.doom.d "$git_path"
 
-echo "$new_number"
-
 cd /home/jonalm/desktopgit/Desktop/
 git add --all
 git commit -m "commit ${new_number}"
 git push -u -f origin main
-
-
 
 if [ $? -eq 0 ]; then
   echo "{ \"number\": $new_number }" | jq . > "$json_file"
