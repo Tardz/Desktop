@@ -190,28 +190,46 @@ keys = [
         #ROFI
         Key([mod], "space", lazy.spawn("/home/jonalm/.config/rofi/files/launchers/type-1/launcher.sh"), desc='Rofi drun'),
         Key([mod], "Escape", lazy.spawn("/home/jonalm/.config/rofi/files/powermenu/type-2/powermenu.sh"), desc='Rofi powermenu'),
-        Key([mod], "w", lazy.spawn("/home/jonalm/scripts/rofi/config_files.sh"), desc='Rofi config files'),
-        Key([mod], "l", lazy.spawn("/home/jonalm/scripts/rofi/search_web.sh"), desc='Rofi web search'),
-        Key([mod], "k", lazy.spawn("/home/jonalm/scripts/rofi/automation.sh"), desc='Rofi automation scripts'),
+        Key([mod], "w", lazy.spawn("/home/jonalm/scripts/rofi/config/config_files.sh"), desc='Rofi config files'),
+        Key([mod], "l", lazy.spawn("/home/jonalm/scripts/rofi/search/search_web.sh"), desc='Rofi web search'),
+        Key([mod], "k", lazy.spawn("/home/jonalm/scripts/rofi/automation/automation.sh"), desc='Rofi automation scripts'),
 #-END_KEYS
 ]
         
 ### GROUP SETTINGS ###
 #CIRCLE: 
 groups = [
-        Group('1', label = ""), #Other
-        Group('2', label = "", matches=[Match(wm_class=["brave-browser"])]), #Browser
-        Group('3', label = "", matches=[Match(wm_class=["code"])]), #Code
-        Group('4', label = "", matches=[Match(wm_class=["pcmanfm"])]), #Files
-        Group('5', label = "", matches=[Match(wm_class=["thunderbird"])]), #Mail
-        Group('6', label = "", matches=[Match(wm_class=["libreoffice"])]), #Docs
-        Group('7', label = "", matches=[Match(wm_class=["discord"])]), #Social
-        Group('8', label = "", matches=[Match(wm_class=["tlpui"])]), #Settings
-        Group('A', label = "", matches=[Match(wm_class=["Steam"])]), #Games
+        Group('1', label = "", matches=[
+            Match(wm_class = ["brave-browser"]),
+            ]), #Other
+        Group('2', label = "", matches=[
+            Match(wm_class = ["brave-browser"]),
+            ]), #Browser
+        Group('3', label = "", matches=[
+            Match(wm_class = ["code"]),
+            ]), #Code
+        Group('4', label = "", matches=[
+            Match(wm_class = ["pcmanfm"]),
+            ]), #Files
+        Group('5', label = "", matches=[
+            Match(wm_class = ["thunderbird"]),
+            ]), #Mail
+        Group('6', label = "", matches=[
+            Match(wm_class = ["libreoffice"]),
+            ]), #Docs
+        Group('7', label = "", matches=[
+            Match(wm_class = ["discord"]),
+            ]), #Social
+        Group('8', label = "", matches=[
+            Match(wm_class = ["tlpui"]),
+            ]), #Settings
+        Group('A', label = "", matches=[
+            Match(wm_class=["Steam"]),
+            ]), #Games
         Group('9', label = ""), #Scratchpad
 
 ]
-#", "", "", "", "", "", "", "", ""
+
 focus_value = True
 
 ### SCRATCHPAD ###
