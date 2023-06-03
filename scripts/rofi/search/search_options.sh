@@ -1,4 +1,7 @@
 declare -a options=(
+'Google drive - https://drive.google.com/drive/u/0/my-drive'
+'TDDD79 - https://www.ida.liu.se/~TDDD79/index.sv.shtml'
+'TSEA28 - https://www.isy.liu.se/edu/kurs/TSEA28/'
 'TDDD80 - https://www.ida.liu.se/~TDDD80/index.sv.shtml'
 'TDDD78 - https://www.ida.liu.se/~TDDD78/index.sv.shtml'
 'TDDD85 - https://www.ida.liu.se/~TDDD14/index.en.shtml'

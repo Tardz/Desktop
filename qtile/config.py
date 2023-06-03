@@ -88,12 +88,16 @@ def spawn_steam(qtile):
     qtile.cmd_to_screen(0)
 
 @lazy.function
+def spawn_libre_office(qtile):
+    qtile.cmd_to_screen(0)
+
+@lazy.function
 def check(qtile):
-    qtile.cmd_spawn("python /home/jonalm/.config/qtile/qtile_scripts/check_and_launch_app.py " + "null")
+    qtile.cmd_spawn("python /home/jonalm/scripts/qtile/check_and_launch_app.py " + "null")
 
 @lazy.function
 def check_youtube(qtile):
-    qtile.cmd_spawn("python /home/jonalm/.config/qtile/qtile_scripts/check_and_launch_app.py " + "youtube")
+    qtile.cmd_spawn("python /home/jonalm/scripts/qtile/check_and_launch_app.py " + "youtube")
 
 @lazy.function
 def close_all_windows(qtile):
@@ -174,6 +178,7 @@ keys = [
         Key([mod], "v", spawn_code, lazy.group["3"].toscreen(), check, desc='VScode'),
         Key([mod], "m", spawn_thunderbird, lazy.group["5"].toscreen(), check, desc='Mail'),
         Key([mod], "g", spawn_steam, lazy.group["A"].toscreen(), check, desc='Mail'),
+        Key([mod], "o", spawn_libre_office, lazy.group["6"].toscreen(), check, desc='Mail'),
         #Key([mod], "e", lazy.spawn("/usr/bin/emacs"), desc='Emacs'),
 
         #URL
@@ -200,12 +205,12 @@ keys = [
 #CIRCLE: 
 groups = [
         Group('1', label = "", matches=[
-            Match(wm_class = ["brave-browser"]),
             ]), #Other
         Group('2', label = "", matches=[
             Match(wm_class = ["brave-browser"]),
             ]), #Browser
         Group('3', label = "", matches=[
+            Match(wm_class = ["jetbrains-studio"]),
             Match(wm_class = ["code"]),
             ]), #Code
         Group('4', label = "", matches=[
@@ -388,7 +393,7 @@ group_box_settings_bar1 = {
 
 ### BAR ###
 #PowerButton - ⏻
-bar1 = Bar([
+two_monitor_bar_1 = Bar([
     # POWERBUTTON #
     widget.TextBox(
         text = "",
@@ -524,7 +529,7 @@ bar1 = Bar([
     border_color = bar_border_color,
     )
 
-bar2 = Bar([
+two_monitor_bar_2 = Bar([
     # TIME #
     widget.Clock(
         format = " %R",
@@ -645,6 +650,185 @@ bar2 = Bar([
     border_color = bar_border_color,
     )
 
+single_monitor_bar = Bar([
+    # POWERBUTTON #
+    widget.TextBox(
+        text = "",
+        foreground = sidebuttons_color,
+        background = barbackground,
+        font = fnt1,
+        fontsize = powerbutton_size,
+        padding = powerbutton_padding,
+    ),
+    
+    # GROUPBOX #
+    left_circle(),
+    widget.GroupBox(
+        margin = groupbox_margin,
+        font = fnt1,
+        fontsize = groupbox_icon_size,
+        visible_groups = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "A"],
+        **group_box_settings_bar1,
+    ),
+    right_circle(),
+
+    seperator(),
+
+    # LAYOUT #
+    left_circle(),
+    widget.CurrentLayoutIcon(
+        custom_icon_paths = [os.path.expanduser("~/.config/qtile/icons")],
+        foreground = barbackground,
+        background = widgetbackground,
+        padding = layouticon_padding,
+        scale = layouticon_scale,
+    ),
+    right_circle(),
+
+    seperator(),
+
+    # UPDATES #
+    left_circle(),
+    widget.TextBox(
+        text = " ",
+        font = fnt2,
+        foreground = updates_color,
+        background = widgetbackground,
+        fontsize = update_icon_size,
+    ),
+    widget.CheckUpdates(
+        display_format='{updates}',
+        distro = "Arch",
+        colour_have_updates = textbackground,
+        foreground = textbackground,
+        background = widgetbackground,
+        update_interval = update_update_interval,
+    ),
+    widget.TextBox(
+        text = "Pacs",
+        foreground = textbackground,
+        background = widgetbackground,
+        fontsize = pacs_text_size,
+    ),
+    right_circle(),
+
+    widget.Spacer(
+        bar.STRETCH,
+        background = barbackground
+    ),
+
+    # CURRENTWINDOW #
+    left_circle(),
+    widget.TextBox(
+        text = " ",
+        foreground = windowname_color,
+        background = widgetbackground,
+        fontsize = icon_size,
+        font = fnt1,
+    ),
+    widget.WindowCount(
+        background = widgetbackground,
+        fontsize = 9.5,
+    ),
+    widget.WindowName(
+        background = widgetbackground,
+        foreground = textbackground,
+        width = bar.CALCULATED,
+        empty_group_string = "Desktop",
+        max_chars = windowname_max_chars,
+    ),
+    right_circle(),
+
+    widget.Spacer(
+        bar.STRETCH,
+        background = barbackground
+    ),
+
+    seperator(),
+
+    # VOLUME #
+    left_circle(),
+    widget.TextBox(
+        text = "",
+        foreground = volume_color,
+        background = widgetbackground,
+        font = fnt1,
+        fontsize = icon_size,
+    ),
+    widget.PulseVolume(
+        foreground = textbackground,
+        background = widgetbackground,
+        limit_max_volume = "True",
+    ),
+    right_circle(),
+
+    seperator(),
+
+    # CPU #
+    left_circle(),
+    widget.CPU(
+        format = '{load_percent}% {freq_current}GHz',
+        foreground = textbackground,
+        background = widgetbackground,
+        update_interval = cpu_update_interval,
+    ),    
+    widget.TextBox(
+        text = " ",
+        font = fnt2,
+        foreground = cpu_color,
+        background = widgetbackground,
+        fontsize = icon_size,
+    ),
+    right_circle(),
+
+    seperator(),
+
+    # NET #
+    left_circle(),
+    widget.NvidiaSensors(
+    ),
+    widget.TextBox(
+        text = "",
+        font = fnt2,
+        foreground = cpu_color,
+        background = widgetbackground,
+        fontsize = icon_size,
+    ),
+    right_circle(),
+
+    seperator(),
+
+    # TIME #
+    left_circle(),
+    widget.TextBox(
+        text = "",
+        font = fnt1,
+        foreground = clock_color,  # fontsize=38
+        background = widgetbackground,
+        fontsize = icon_size,
+    ),
+    widget.Clock(
+        format = "%a, %b %d %R",
+        background = widgetbackground,
+        foreground = textbackground,
+    ),
+    right_circle(),
+
+    widget.TextBox(
+        text = "󰍜",
+        foreground = sidebuttons_color,
+        background = barbackground,
+        font = fnt1,
+        fontsize = menu_button_size,
+        padding = menu_button_padding,
+    ),
+    ], 
+    bar_size, 
+    margin = bar_margin,
+    border_width = bar_width,
+    border_color = bar_border_color,
+    )
+
 ### LAYOUT SETTINGS ###
 layouts = [
     MonadTall(
@@ -672,27 +856,33 @@ floating_layout = Floating(
     float_rules   = [
         ###Insert here###
         *Floating.default_float_rules,
+        Match(wm_class = "nitrogen"),
+        Match(wm_class = "se-liu-jonal155-tetris-Tester"),
         Match(wm_class="qalculate-gtk"),
         Match(wm_class="pavucontrol"),
         Match(wm_class="blueman-manager"),
         Match(wm_class="polychromatic-controller"),
         Match(wm_class="qalculate-qt"),
         Match(wm_class="lxappearance"),
-        Match(wm_class = "nitrogen"            ),
         Match(wm_class = "se-liu-davhe786_jonal155-pong-Main"),
-        #Match(wm_class = "pavucontrol"         ),
-        #Match(wm_class = "nm-connection-editor"),
-        #Match(wm_class = "yad"),
-        #Match(wm_class = "qalculate-qt"),
         ])
 
 ### DECLARING WIDGET SETTINGS ###
 extension_defaults = widget_defaults.copy()
 
 ### DECLARING PANEL ###
+screen_output = subprocess.check_output(["xrandr", "-q"]).decode().strip()
+screen_data = subprocess.check_output(['awk', '/HDMI-0|DVI-D-0/ {print $1 ": " $2}'], input=screen_output.encode()).decode().strip()
+if "HDMI-0: connected" and "DVI-D-0: connected" in screen_data:
+    left_bar = two_monitor_bar_1
+    right_bar = two_monitor_bar_2
+else:
+    left_bar = single_monitor_bar
+    right_bar = None
+
 screens = [
-    Screen(top=bar1, bottom=bar.Gap(bar_gap_size), left=bar.Gap(bar_gap_size), right=bar.Gap(bar_gap_size)),
-    Screen(top=bar2, bottom=bar.Gap(bar_gap_size), left=bar.Gap(bar_gap_size), right=bar.Gap(bar_gap_size)) 
+    Screen(top=left_bar, bottom=bar.Gap(bar_gap_size), left=bar.Gap(bar_gap_size), right=bar.Gap(bar_gap_size)),
+    Screen(top=right_bar, bottom=bar.Gap(bar_gap_size), left=bar.Gap(bar_gap_size), right=bar.Gap(bar_gap_size)) 
     ]
         
 ### HOOKS ###

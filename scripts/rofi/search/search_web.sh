@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BROWSER="brave"
+qtile_info=$(qtile cmd-obj -o group -f info)
 
 source /home/jonalm/scripts/rofi/search/search_options.sh 
 
@@ -23,8 +24,8 @@ for option in "${options[@]}"; do
                 qtile cmd-obj -o group 2 -f toscreen
             else
                 echo "screen 2"
-                qtile cmd-obj -o cmd -f next_screen
                 qtile cmd-obj -o group 2 -f toscreen
+                qtile cmd-obj -o cmd -f next_screen
             fi
             $BROWSER "$url""$query"
             exit 1
@@ -37,6 +38,7 @@ if [[ "$qtile_info" == *"'screen': 1"* ]]; then
     qtile cmd-obj -o group 2 -f toscreen
 else
     echo "screen 2 a"
+    echo "QTIKLE " + "$qtile_info"
     qtile cmd-obj -o cmd -f next_screen
     qtile cmd-obj -o group 2 -f toscreen
 fi
