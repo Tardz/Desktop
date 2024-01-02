@@ -1,6 +1,6 @@
 #!/bin/bash
   
-source /home/jonalm/scripts/rofi/automation/automation_options.sh 
+source ~/scripts/rofi/automation/desktop/automation_options.sh 
 
 while true; do
     choice=$(printf '%s\n' "${root_options[@]}" | cut -d'|' -f1-1 | rofi -config ~/.config/rofi/files/config.rasi -theme "$HOME/.config/rofi/files/launchers/type-1/style-3-automation.rasi" -dmenu -i -l 5 -p '')
