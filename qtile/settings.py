@@ -1,9 +1,33 @@
+"""
+Author: Jonathan Almstedt [Tardz]
+Updated: 2023-12-29
+
+Description: Reads values from json files contained in the settings app
+specifically made for qtile, the app and the json files can be found in 
+"$HOME/scripts/qtile/settings_menu". This settings file will use default 
+values if no json file can be found. To be able to change the way qtile 
+works and looks clone the scripts directory on https://github.com/Tardz/Laptop.git
+and use the settings menu.
+"""
+
+import json
+import os
+
 ### KEYBINDING VARIABLES ###
 mod1           = "Alt"
 mod            = "mod4"
 myBrowser      = "brave"
 myTerm         = "alacritty"
 alttab_spawned = False
+
+check_dict = {
+    #[0] - app, [1] - command, [2] - screen
+    "c": ["firefox", None, 0],
+    "d": ["discord", None, 0],
+    "v": [None, None, 1],
+    "n": ["pcmanfm", None, 0],
+    9  : []
+}
 
 ### COLORS ###
 colors = [
@@ -22,7 +46,7 @@ colors = [
     ["#d08770", "#d08770"],     # 11 orange
     ["#8fbcbb", "#8fbcbb"],     # 12 super cyan
     ["#5e81ac", "#5e81ac"],     # 13 super blue
-    ["#242831.85", "#242831.85"],     # 14 super dark background
+    ["#242831.95", "#242831.95"],     # 14 super dark background
     ["#434C5E", "#434C5E"],     # 15 darker grey
     #-Dark mode
     ["#00000000", "#00000000"], # 16 transp1
@@ -72,137 +96,210 @@ colors = [
     ["#ffcccb", "#ffcccb"],     # 59 nordlightrred
     ["#ECEFF4", "#ECEFF4"],     # 60 nordwhite1
     ["#2e3441", "#2e3441"],     # 61 darker grey
-    ["#00000000", "#00000000"], # 63 Transp
+    ["#000000AA", "#000000AA"], # 63 Transp
 ]
 
-### FONTS ###
-fnt2                            = "ttf-dejavu"
-normal_font                     = "FiraCode Nerd Font"
-icon_font                       = "Font Awesome 6 Free Solid"
-bold_font                       = "FiraCode Nerd Font Bold"
+qtile_settings = {}
+file_path = os.path.expanduser("~/scripts/qtile/settings_menu/data/qtile_data.json")
+if os.path.isfile(file_path):
+    with open(file_path, "r") as file:
+        qtile_settings = json.load(file)
 
-### BAR VARIABLES ###
-#-Circle
-circle_size                     = 26
-circle_padding                  = 0
+qtile_colors = {}
+file_path = os.path.expanduser("~/scripts/qtile/settings_menu/data/qtile_colors.json")
+if os.path.isfile(file_path):
+    with open(file_path, "r") as file:
+        qtile_colors = json.load(file)
 
-#-Seperator
-seperator_size                  = 40
-seperator_padding               = 15
-seperator_line_width            = 15
+laptop = qtile_settings.get("laptop", False)
 
-#-Widget defaults
-widget_default_foreground_color = colors[9]
-widget_default_background_color = colors[62]
-widget_default_font_size        = 9
-widget_default_padding          = 4
+if laptop:
+    bar_scaling                     = 1
+    icon_size_scaling               = 1
+    icon_padding_scaling            = 1
+    widget_padding_scaling          = 1
+    widget_size_scaling             = 1
+    seperator_padding_scaling       = 1
+    seperator_line_scaling          = 1
+    general_width_scaling           = 1
+    task_list_scaling               = 1
+else:
+    bar_scaling                     = 0.7
+    icon_size_scaling               = 0.72
+    icon_padding_scaling            = 0.65
+    widget_padding_scaling          = 0.9
+    widget_size_scaling             = 0.76
+    seperator_padding_scaling       = 1
+    seperator_line_scaling          = 0.8
+    general_width_scaling           = 0.9
+    task_list_scaling               = 0.9
 
-#-Power_button
-powerbutton_size                = 24
-powerbutton_padding             = 16
+#*###############################
+#*           BAR               ##
+#*###############################
+#?#############
+#?   COLORS  ##
+#?#############
+#!ALL
+transparent                         = "#000000.0"
+icon_background                     = "#1e2227"
+text_color                          = colors[9]
+widget_default_foreground_color     = colors[9]
 
-#-Menu_button
-menu_button_size                = 26
-menu_button_padding             = 7
+group_box_active_color              = colors[60]
+group_box_inactive_color            = colors[10]
+group_box_block_highlight_color     = colors[3]
+group_box_highlight_color           = colors[3]
+group_box_other_border_color        = colors[26]
+group_box_foreground_color          = colors[2]
+group_box_background_color          = colors[3]
+group_box_highlight_text_color      = colors[3]
+group_box_urgentborder_color        = colors[3]
 
-#-Decorator
-decorator_padding               = -1
-decorator_border_width          = [0, 0, 3, 0]
+icon_background_1                   = "#b48ead"
+icon_background_2                   = "#9B98B7"
+icon_background_3                   = "#81A1C1"
+icon_background_4                   = "#8fbcbb"
+icon_background_5                   = "#a3be8c"
+icon_background_6                   = "#ebcb8b"
+icon_background_7                   = "#d08770"
+icon_background_8                   = "#bf616a"
 
-#-Layout_icon
-layout_normal_color_stack       = colors[2][0]
-layout_focus_color_stack        = colors[2][0]
-layout_normal_color_monadtall   = colors[2][0]
-layout_focus_color_monadtall    = colors[10][0]
-layout_normal_color_floating    = colors[2][0]
-layout_focus_color_floating     = colors[2][0]
-layouticon_padding              = 7
-layouticon_scale                = 0.45
+icon_foreground_1                   = "#1e2227"
+icon_foreground_2                   = "#1e2227"
+icon_foreground_3                   = "#1e2227"
+icon_foreground_4                   = "#1e2227"
+icon_foreground_5                   = "#1e2227"
+icon_foreground_6                   = "#1e2227"
+icon_foreground_7                   = "#1e2227"
+icon_foreground_8                   = "#1e2227"
 
-#-Bar
-bar_background_color            = colors[14]
-bar_border_color                = colors[2][0]
-bar_size                        = 28
-bar_gap_size                    = -3
-bar_width_top                   = [0, 0, 3, 0]
-bar_width_bottom                = 2
-bar_margin_top                  = [0, 0, -1, 0]
-bar_margin_bottom               = [5, 5, 5, 5]
-icon_seperator_padding          = -8
+#!NORD
+# bar_background_color               = "#353b4a.9"
+# bar_border_color                   = "#717c99.9"
+# right_decor_background             = "#606b86.9"
 
-#-Groupbox
-group_box_active_color          = colors[60]
-group_box_inactive_color        = colors[10]
-group_box_block_highlight_color = colors[3]
-group_box_highlight_color       = colors[3]
-group_box_this_border_color     = widget_default_background_color
-group_box_other_border_color    = widget_default_background_color
-group_box_foreground_color      = colors[2]
-group_box_background_color      = colors[3]
-group_box_urgentborder_color    = colors[3]
-groupbox_margin                 = 4
+#!BLACK
+bar_background_color                = "#1e2227.92"
+bar_border_color                    = "#454951"
+right_decor_background              = bar_border_color
 
-#-Cpu
-cpu_icon_color                  = colors[12]
-cpu_update_interval             = 3
+#!OTHER
+# bar_border_color                   = "#4f586e.95"
 
-#-Notification
-notification_icon_color         = colors[5]
- 
-#-Backlight
-backlight_icon_color            = colors[11]
-backlight_update_interval       = 20
+#?#############
+#?  GENERAL  ##
+#?#############
+top_bar_on                          = qtile_settings.get("top_bar_status", True)
+bottom_bar_on                       = qtile_settings.get("bottom_bar_status", True)
 
-#-Battery
-battery_icon_color              = colors[4]
+#?#############
+#?   SIZE    ##
+#?#############
+#!BAR
+top_bar_size                        = int(qtile_settings.get("top_bar_size", 46)*bar_scaling)
+bottom_bar_size                     = int(qtile_settings.get("bottom_bar_size", 55)*bar_scaling)
+
+bar_width = [] 
+for num in qtile_settings.get("bar_width_top", [0, 0, 3, 0]):
+    bar_width.append(int(num*general_width_scaling))
+
+bar_width_top                       = bar_width
+bar_margin_top                      = qtile_settings.get("bar_margin_top", [0, -2, 5 ,-2])
+bar_width_bottom                    = qtile_settings.get("bar_width_bottom", [0, 0, 0 ,0])
+bar_margin_bottom                   = qtile_settings.get("bar_margin_bottom", [5, 300, 16, 300])
+
+#!GAP
+bar_gap_size                        = qtile_settings.get("bar_gap_size", 3)
+
+#!SEPERATOR
+seperator_padding                   = int(qtile_settings.get("seperator_padding", -1)*seperator_padding_scaling)
+seperator_line_width                = int(qtile_settings.get("seperator_line_width", 15)*seperator_line_scaling)
+
+#!WIDGET DEFAULT
+widget_default_font_size            = int(18*widget_size_scaling)
+widget_default_padding              = int(6*widget_padding_scaling)
+bottom_widget_width                 = int(3*general_width_scaling)
+
+#!GROUPBOX
+groupbox_margin                     = int(4*widget_padding_scaling)
+
+#!LAYOUT ICON
+layouticon_padding                  = int(-2*widget_padding_scaling)
+layouticon_scale                    = 0.48*widget_padding_scaling
+
+#!ICONS
+icon_size                           = int(14*icon_size_scaling)
+
+#!DECOR
+left_decor_padding                  = int(9*icon_padding_scaling)
+right_decor_padding                 = int(9*icon_padding_scaling)
+
+#!TASKLIST
+task_list_margin                    = int(7*task_list_scaling)
+task_list_border_width              = int(4*general_width_scaling)
+task_list_spacing                   = 2
+task_list_icon_size                 = 0
+
+#*###############################
+#*           FOCUS             ##
+#*###############################
+follow_mouse_focus                  = qtile_settings.get("follow_mouse_focus", True)
+cursor_warp                         = qtile_settings.get("cursor_warp", False)
+scratchpad_focus_value              = qtile_settings.get("scratchpad_focus_value", True)
+focus_on_window_activation          = qtile_settings.get("focus_on_window_activation", "smart")
+
+#*###############################
+#*           WINDOWS           ##
+#*###############################
+auto_fullscreen                     = qtile_settings.get("auto_fullscreen", True)
+auto_minimize                       = qtile_settings.get("auto_minimize", True)
+bring_front_click                   = qtile_settings.get("bring_front_click", True)
+
+#*###############################
+#*           OTHER             ##
+#*###############################
+reconfigure_screens                 = qtile_settings.get("reconfigure_screens", False)
+
+#*###############################
+#*           lAYOUT            ##
+#*###############################
+#?#############
+#?   COLORS  ##
+#?#############
+#!NORMAL
+layout_normal_color_stack           = colors[2][0]
+layout_normal_color_monadtall       = colors[2][0]
+layout_normal_color_floating        = colors[2][0]
+
+#!FOCUS
+layout_focus_color_monadtall        = bar_border_color
+layout_focus_color_stack            = colors[2][0]
+layout_focus_color_floating         = bar_border_color
+
+#?#############
+#?   SIZE    ##
+#?#############
+#!ALL
+layout_margin                       = 10
+layout_border_width                 = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
+layout_num_stacks                   = 1
+
+#!FLOATING
+floating_border_width               = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
+
+#*#############################
+#*           FONTS           ##
+#*#############################
+normal_font                         = "FiraCode Nerd Font"
+bold_font                           = "FiraCode Nerd Font Bold"
+icon_font                           = "Font Awesome 6 Free Solid"
+other_font                          = "ttf-dejavu"
+
+#*#############################
+#*          UPDATES          ##
+#*#############################
+wifi_update_interval            = 10
+cpu_update_interval             = 10
 battery_update_interval         = 20
-
-#-Wifi
-wifi_icon_color                 = colors[6]
-wifi_update_interval            = 20
- 
-#-Volume
-volume_icon_color               = colors[8]
-
-#-Date
-date_icon_color                 = colors[3]
-
-#-Notification history
-notification_history_icon_color = colors[13] 
-
-#-Bottom icons
-bottom_icons_font_size_plus     = 2
-bottom_icons_padding_plus       = 8
-
-#-Bottom seperators
-bottom_seperator_line_width     = 2
-bottom_seperator_size_percent   = 55
-bottom_seperator_padding        = 0
-
-#-Task list
-tasklist_border_width           = -1
-tasklist_margin_x               = 3
-tasklist_margin_y               = 5
-tasklist_icon_size              = 12
-tasklist_spacing                = 6
-
-### GROUPS ###
-focus_value                     = True
-
-### LAYOUT VARIABLES ### 
-layout_margin                   = 8
-layout_border_width             = 2
-floating_border_width           = 2
-layout_num_stacks               = 1
-
-### QTILE SETTINGS ###
-dgroups_key_binder              = None
-dgroups_app_rules               = [] 
-follow_mouse_focus              = True
-bring_front_click               = True
-cursor_warp                     = False
-auto_fullscreen                 = True
-focus_on_window_activation      = "smart"
-reconfigure_screens             = True
-auto_minimize                   = True
-scratchpad_focus_value          = True
+backlight_update_interval       = 20

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+excludeListPath="$script_dir/exclude-in-scripts.txt"
+
 /home/jonalm/scripts/other/check_internet.sh
 internet_status=$?
 
@@ -21,12 +24,11 @@ else
   echo "{ \"number\": $new_number, \"date\": \"$current_date_time\", \"old_date\": \"$old_date\" }" | jq . > "$json_file"
 fi
 
-sudo rsync -av --delete /home/jonalm/desktopgit/Desktop/ /home/jonalm/desktopgit/DesktopBackup
-sudo rsync -av --delete /home/jonalm/scripts "$git_path"
+sudo rsync -av --delete /home/jonalm/desktopgit/Desktop/ /home/jonalm/desktopgit/DesktopBackup/
+sudo rsync --exclude-from="$excludeListPath" -av --delete /home/jonalm/scripts "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/qtile "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/rofi "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/alacritty "$git_path"
-sudo rsync -av --delete /home/jonalm/.config/synth-shell "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/picom.conf "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/fusuma "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/gtk-3.0 "$git_path"
@@ -34,15 +36,13 @@ sudo rsync -av --delete /home/jonalm/.config/tmux "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/dunst "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/eww "$git_path"
 sudo rsync -av --delete /home/jonalm/.config/redshift "$git_path"
-sudo rsync -av --delete /home/jonalm/.doom.d "$git_path"
 sudo rsync -av --delete /home/jonalm/.imwheelrc "$git_path"
 sudo rsync -av --delete /home/jonalm/.inputrc "$git_path"
 
-
-cd /home/jonalm/desktopgit/Desktop
+cd /home/jonalm/desktopgit/Desktop/
 git add --all
 git commit -m "commit ${new_number}"
-git push -u -f origin main
+git push -u --force origin main
 
 current_time="Time:$(date +'%T')"
 
