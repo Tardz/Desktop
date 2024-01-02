@@ -128,9 +128,9 @@ else:
     icon_size_scaling               = 0.72
     icon_padding_scaling            = 0.65
     widget_padding_scaling          = 0.9
-    widget_size_scaling             = 0.76
-    seperator_padding_scaling       = 1
-    seperator_line_scaling          = 0.8
+    widget_size_scaling             = 0.74
+    seperator_padding_scaling       = 0.9
+    seperator_line_scaling          = 0.6
     general_width_scaling           = 0.9
     task_list_scaling               = 0.9
 
@@ -156,14 +156,30 @@ group_box_background_color          = colors[3]
 group_box_highlight_text_color      = colors[3]
 group_box_urgentborder_color        = colors[3]
 
-icon_background_1                   = "#b48ead"
-icon_background_2                   = "#9B98B7"
-icon_background_3                   = "#81A1C1"
-icon_background_4                   = "#8fbcbb"
-icon_background_5                   = "#a3be8c"
-icon_background_6                   = "#ebcb8b"
-icon_background_7                   = "#d08770"
-icon_background_8                   = "#bf616a"
+if laptop:
+    icon_background_1                   = "#b48ead"
+    icon_background_2                   = "#9B98B7"
+    icon_background_3                   = "#81A1C1"
+    icon_background_4                   = "#8fbcbb"
+    icon_background_5                   = "#a3be8c"
+    icon_background_6                   = "#ebcb8b"
+    icon_background_7                   = "#d08770"
+    icon_background_8                   = "#bf616a"
+    icon_background_9                   = "#b48ead"
+    icon_background_10                  = "#9B98B7"
+    icon_background_11                  = "#81A1C1"
+else:
+    icon_background_1                   = "#b48ead"
+    icon_background_2                   = "#9B98B7"
+    icon_background_3                   = "#81A1C1"
+    icon_background_4                   = "#ebcb8b"
+    icon_background_5                   = "#d08770"
+    icon_background_6                   = "#bf616a"
+    icon_background_7                   = "#d08770"
+    icon_background_8                   = "#bf616a"
+    icon_background_9                   = "#b48ead"
+    icon_background_10                  = "#9B98B7"
+    icon_background_11                  = "#81A1C1"
 
 icon_foreground_1                   = "#1e2227"
 icon_foreground_2                   = "#1e2227"
@@ -173,6 +189,9 @@ icon_foreground_5                   = "#1e2227"
 icon_foreground_6                   = "#1e2227"
 icon_foreground_7                   = "#1e2227"
 icon_foreground_8                   = "#1e2227"
+icon_foreground_9                   = "#1e2227"
+icon_foreground_10                  = "#1e2227"
+icon_foreground_11                  = "#1e2227"
 
 #!NORD
 # bar_background_color               = "#353b4a.9"
@@ -281,7 +300,7 @@ layout_focus_color_floating         = bar_border_color
 #?   SIZE    ##
 #?#############
 #!ALL
-layout_margin                       = 10
+layout_margin                       = int(10*bar_scaling)
 layout_border_width                 = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
 layout_num_stacks                   = 1
 
