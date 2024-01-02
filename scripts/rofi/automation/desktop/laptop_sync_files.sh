@@ -12,14 +12,11 @@ fi
 
 git_path="$HOME/laptopgit/Laptop"
 cd "$git_path"
+git pull
 
 sudo rsync -av --delete "$git_path" $HOME/laptopgit/LaptopBackup/
 sudo rsync -av --delete scripts $HOME/scripts/
 sudo rsync -av --delete qtile $HOME/.config/qtile/
-
-git add --all
-git commit -m "Bisync from desktop"
-git push -u --force origin main
 
 current_time="Time:$(date +'%T')"
 
