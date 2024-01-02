@@ -3,18 +3,18 @@
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 excludeListPath="$script_dir/exclude-in-scripts.txt"
 
-~/scripts/other/check_internet.sh
+$HOME/scripts/other/check_internet.sh
 internet_status=$?
 
 if [ $internet_status -eq 1 ]; then
   exit 1
 fi
 
-git_path="~/laptopgit/Laptop"
+git_path="$HOME/laptopgit/Laptop"
 
-sudo rsync -av --delete "$git_path" ~/laptopgit/LaptopBackup/
-sudo rsync --exclude-from="$excludeListPath" -av --delete ~/scripts "$git_path"
-sudo rsync -av --delete ~/.config/qtile "$git_path"
+sudo rsync -av --delete "$git_path" $HOME/laptopgit/LaptopBackup/
+sudo rsync --exclude-from="$excludeListPath" -av --delete $HOME/scripts "$git_path"
+sudo rsync -av --delete $HOME/.config/qtile "$git_path"
 
 cd "$git_path"
 git add --all

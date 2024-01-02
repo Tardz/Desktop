@@ -3,19 +3,19 @@
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 excludeListPath="$script_dir/exclude-in-scripts.txt"
 
-~/scripts/other/check_internet.sh
+$HOME/scripts/other/check_internet.sh
 internet_status=$?
 
 if [ $internet_status -eq 1 ]; then
   exit 1
 fi
 
-git_path="~/laptopgit/Laptop"
+git_path="$HOME/laptopgit/Laptop"
 cd "$git_path"
 
-sudo rsync -av --delete "$git_path" ~/laptopgit/LaptopBackup/
-sudo rsync -av --delete scripts ~/scripts/
-sudo rsync -av --delete qtile ~/.config/qtile/
+sudo rsync -av --delete "$git_path" $HOME/laptopgit/LaptopBackup/
+sudo rsync -av --delete scripts $HOME/scripts/
+sudo rsync -av --delete qtile $HOME/.config/qtile/
 
 git add --all
 git commit -m "Bisync from desktop"
