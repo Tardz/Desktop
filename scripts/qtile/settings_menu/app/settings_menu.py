@@ -3,7 +3,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
 from config_manager import ConfigManager
-from event_handler import EventHandler
+from sidebar_events import EventHandler
 from sidebar import Sidebar
 from content import Content
 import copy
@@ -41,17 +41,17 @@ class SettingsMenu(Gtk.Window):
         self.connect("key-press-event", self.event_handler.on_button_press)
 
     def load_qtile_data(self):
-        self.qtile_data_file_path = os.path.expanduser('~/scripts/qtile/settings_menu/data/qtile_data.json')
+        self.qtile_data_file_path = os.path.expanduser('~/settings_data/qtile_data.json')
         self.qtile_data = self.config_manager.load_qtile_data(self.qtile_data_file_path)
         self.qtile_data_copy = copy.deepcopy(self.qtile_data)
 
     def load_qtile_colors(self):
-        self.qtile_colors_file_path = os.path.expanduser('~/scripts/qtile/settings_menu/data/qtile_colors.json')
+        self.qtile_colors_file_path = os.path.expanduser('~/settings_data/qtile_colors.json')
         self.qtile_colors = self.config_manager.load_qtile_colors(self.qtile_colors_file_path)
         self.qtile_colors_copy = copy.deepcopy(self.qtile_colors)
 
     def load_other_data(self):
-        self.other_data_file_path = os.path.expanduser('~/scripts/qtile/settings_menu/data/other_data.json')
+        self.other_data_file_path = os.path.expanduser('~/settings_data/other_data.json')
         self.other_data = self.config_manager.load_other_data(self.other_data_file_path)
         self.other_data_copy = copy.deepcopy(self.other_data)
 
@@ -66,6 +66,7 @@ class SettingsMenu(Gtk.Window):
         self.css()
         self.side_bar = Sidebar(self)
         self.content = Content(self)
+        print(self.list_elements)
 
         self.main_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
         self.main_box.pack_start(self.side_bar.side_bar_box, False, True, 1)
@@ -73,7 +74,7 @@ class SettingsMenu(Gtk.Window):
         self.add(self.main_box)
     
         self.show_all()
-        self.content.qtile_content_box.hide()
+        self.content.qtile.qtile_content_box.hide()
         self.event_handler.change_global_options_visability()
         self.side_bar.search_entry.grab_focus()
 

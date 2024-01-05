@@ -1,7 +1,8 @@
 declare -a options=(
-'Udev rules - /etc/udev/rules.d/'
+'SDDM config - /etc/sddm.conf.d/'
 'SDDM themes - /usr/share/sddm/themes/'
 "Dunstrc - $HOME/.config/dunst"
+'Udev rules - /etc/udev/rules.d/'
 "Qtile config all - $HOME/.config/qtile/"
 "Qtile config - $HOME/.config/qtile/config.py"
 "Qtile autostart - $HOME/.config/qtile/autostart.sh"

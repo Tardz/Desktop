@@ -20,6 +20,7 @@ myBrowser      = "brave"
 myTerm         = "alacritty"
 alttab_spawned = False
 home           = os.path.expanduser("~")
+
 check_dict = {
     #[0] - app, [1] - command, [2] - screen
     "c": ["firefox", None, 0],
@@ -100,18 +101,18 @@ colors = [
 ]
 
 qtile_settings = {}
-file_path = os.path.expanduser("~/scripts/qtile/settings_menu/data/qtile_data.json")
+file_path = os.path.expanduser("~/settings_data/qtile_data.json")
 if os.path.isfile(file_path):
     with open(file_path, "r") as file:
         qtile_settings = json.load(file)
 
 qtile_colors = {}
-file_path = os.path.expanduser("~/scripts/qtile/settings_menu/data/qtile_colors.json")
+file_path = os.path.expanduser("~/settings_data/qtile_colors.json")
 if os.path.isfile(file_path):
     with open(file_path, "r") as file:
         qtile_colors = json.load(file)
 
-laptop = qtile_settings.get("laptop", False)
+laptop = qtile_settings.get("laptop_version", False)
 
 if laptop:
     bar_scaling                     = 1
