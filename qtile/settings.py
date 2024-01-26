@@ -20,6 +20,7 @@ myBrowser      = "brave"
 myTerm         = "alacritty"
 alttab_spawned = False
 home           = os.path.expanduser("~")
+active_window_name = ""
 
 check_dict = {
     #[0] - app, [1] - command, [2] - screen
@@ -126,7 +127,7 @@ if laptop:
     task_list_scaling               = 1
 else:
     bar_scaling                     = 0.7
-    icon_size_scaling               = 0.72
+    icon_size_scaling               = 0.68
     icon_padding_scaling            = 0.65
     widget_padding_scaling          = 0.9
     widget_size_scaling             = 0.74
@@ -138,6 +139,12 @@ else:
 #*###############################
 #*           BAR               ##
 #*###############################
+#?#############
+#?   STYLE   ##
+#?#############
+# Styles are: "simple", "box"
+bar_style = qtile_settings.get("bar_style", "simple")
+
 #?#############
 #?   COLORS  ##
 #?#############
@@ -157,7 +164,7 @@ group_box_background_color          = colors[3]
 group_box_highlight_text_color      = colors[3]
 group_box_urgentborder_color        = colors[3]
 
-if laptop:
+if bar_style == "box":
     icon_background_1                   = "#b48ead"
     icon_background_2                   = "#9B98B7"
     icon_background_3                   = "#81A1C1"
@@ -170,32 +177,52 @@ if laptop:
     icon_background_10                  = "#b48ead"
     icon_background_11                  = "#9B98B7"
     icon_background_12                  = "#81A1C1"
-else:
-    icon_background_1                   = "#b48ead"
-    icon_background_2                   = "#9B98B7"
-    icon_background_3                   = "#81A1C1"
-    icon_background_4                   = "#8fbcbb"
-    icon_background_5                   = "#8fbcbb"
-    icon_background_6                   = "#a3be8c"
-    icon_background_7                   = "#a3be8c"
-    icon_background_8                   = "#d08770"
-    icon_background_9                   = "#bf616a"
-    icon_background_10                  = "#b48ead"
-    icon_background_11                  = "#9B98B7"
-    icon_background_12                  = "#81A1C1"
+elif bar_style == "simple":
+    icon_background_1                   = transparent
+    icon_background_2                   = transparent
+    icon_background_3                   = transparent
+    icon_background_4                   = transparent
+    icon_background_5                   = transparent
+    icon_background_6                   = transparent
+    icon_background_7                   = transparent
+    icon_background_8                   = transparent
+    icon_background_9                   = transparent
+    icon_background_10                  = transparent
+    icon_background_11                  = transparent
+    icon_background_12                  = transparent
 
-icon_foreground_1                   = "#1e2227"
-icon_foreground_2                   = "#1e2227"
-icon_foreground_3                   = "#1e2227"
-icon_foreground_4                   = "#1e2227"
-icon_foreground_5                   = "#1e2227"
-icon_foreground_6                   = "#1e2227"
-icon_foreground_7                   = "#1e2227"
-icon_foreground_8                   = "#1e2227"
-icon_foreground_9                   = "#1e2227"
-icon_foreground_10                  = "#1e2227"
-icon_foreground_11                  = "#1e2227"
-icon_foreground_12                  = "#1e2227"
+if bar_style == "box":
+    icon_foreground_1                   = "#1e2227"
+    icon_foreground_2                   = "#1e2227"
+    icon_foreground_3                   = "#1e2227"
+    icon_foreground_4                   = "#1e2227"
+    icon_foreground_5                   = "#1e2227"
+    icon_foreground_6                   = "#1e2227"
+    icon_foreground_7                   = "#1e2227"
+    icon_foreground_8                   = "#1e2227"
+    icon_foreground_9                   = "#1e2227"
+    icon_foreground_10                  = "#1e2227"
+    icon_foreground_11                  = "#1e2227"
+    icon_foreground_12                  = "#1e2227"
+elif bar_style == "simple":
+    icon_foreground_1                   = "#b48ead"
+    icon_foreground_2                   = "#9B98B7"
+    icon_foreground_3                   = "#81A1C1"
+    icon_foreground_4                   = "#8fbcbb"
+    icon_foreground_5                   = "#8fbcbb"
+    icon_foreground_6                   = "#a3be8c"
+    icon_foreground_7                   = "#a3be8c"
+    icon_foreground_8                   = "#d08770"
+    icon_foreground_9                   = "#bf616a"
+    icon_foreground_10                  = "#b48ead"
+    icon_foreground_11                  = "#9B98B7"
+    icon_foreground_12                  = "#81A1C1"
+
+app_tray_icon_color_1               = "#81A1C1"
+app_tray_icon_color_2               = "#8fbcbb"
+app_tray_icon_color_3               = "#a3be8c"
+app_tray_icon_color_4               = "#d08770"
+app_tray_icon_color_5               = "#bf616a"
 
 #!NORD
 # bar_background_color               = "#353b4a.9"
@@ -203,9 +230,9 @@ icon_foreground_12                  = "#1e2227"
 # right_decor_background             = "#606b86.9"
 
 #!BLACK
-bar_background_color                = "#1e2227.92"
+bar_background_color                = "#1e2227.8"
 bar_border_color                    = "#454951"
-right_decor_background              = bar_border_color
+right_decor_background              = "#717c99.5"
 
 #!OTHER
 # bar_border_color                   = "#4f586e.95"
@@ -221,28 +248,36 @@ bottom_bar_on                       = qtile_settings.get("bottom_bar_status", Tr
 #?#############
 #!BAR
 top_bar_size                        = int(qtile_settings.get("top_bar_size", 46)*bar_scaling)
-bottom_bar_size                     = int(qtile_settings.get("bottom_bar_size", 55)*bar_scaling)
+bottom_bar_size                     = int(qtile_settings.get("bottom_bar_size", 70)*bar_scaling)
+# bottom_bar_size                     = int(qtile_settings.get("bottom_bar_size", 62)*bar_scaling)
+# bottom_bar_size                     = int(qtile_settings.get("bottom_bar_size", 55)*bar_scaling)
 
 bar_width = [] 
-for num in qtile_settings.get("bar_width_top", [0, 0, 3, 0]):
+for num in qtile_settings.get("bar_width_top", [0, 0, 0, 0]):
     bar_width.append(int(num*general_width_scaling))
 
 bar_width_top                       = bar_width
-bar_margin_top                      = qtile_settings.get("bar_margin_top", [0, -2, 5 ,-2])
+bar_margin_top                      = qtile_settings.get("bar_margin_top", [0, -10, 0, -10])
 bar_width_bottom                    = qtile_settings.get("bar_width_bottom", [0, 0, 0 ,0])
-bar_margin_bottom                   = qtile_settings.get("bar_margin_bottom", [5, 300, 16, 300])
+bar_margin_bottom                   = qtile_settings.get("bar_margin_bottom", [5, 580, 10, 580])
+# bar_margin_bottom                   = qtile_settings.get("bar_margin_bottom", [5, 300, 16, 300])
 
 #!GAP
-bar_gap_size                        = qtile_settings.get("bar_gap_size", 3)
+bar_gap_size                        = qtile_settings.get("bar_gap_size", 0)
 
 #!SEPERATOR
-seperator_padding                   = int(qtile_settings.get("seperator_padding", -1)*seperator_padding_scaling)
+if bar_style == "box":
+    seperator_padding               = int(qtile_settings.get("seperator_padding", 5)*seperator_padding_scaling)
+elif bar_style == "simple":
+    seperator_padding               = int(qtile_settings.get("seperator_padding", 15)*seperator_padding_scaling)
+
 seperator_line_width                = int(qtile_settings.get("seperator_line_width", 15)*seperator_line_scaling)
 
 #!WIDGET DEFAULT
-widget_default_font_size            = int(18*widget_size_scaling)
+widget_default_font_size            = int(17*widget_size_scaling)
 widget_default_padding              = int(6*widget_padding_scaling)
-bottom_widget_width                 = int(3*general_width_scaling)
+bottom_widget_width                 = int(0*general_width_scaling)
+# bottom_widget_width                 = int(3*general_width_scaling)
 
 #!GROUPBOX
 groupbox_margin                     = int(4*widget_padding_scaling)
@@ -253,6 +288,7 @@ layouticon_scale                    = 0.48*widget_padding_scaling
 
 #!ICONS
 icon_size                           = int(14*icon_size_scaling)
+# icon_size                           = int(14*icon_size_scaling)
 
 #!DECOR
 left_decor_padding                  = int(9*icon_padding_scaling)
@@ -304,17 +340,21 @@ layout_focus_color_floating         = bar_border_color
 #?   SIZE    ##
 #?#############
 #!ALL
-layout_margin                       = int(10*bar_scaling)
-layout_border_width                 = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
+layout_margin                       = int(8*bar_scaling)
+layout_border_width                 = int(qtile_settings.get("layout_border_with", 2)*general_width_scaling)
+# layout_border_width                 = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
 layout_num_stacks                   = 1
 
 #!FLOATING
-floating_border_width               = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
+floating_border_width               = int(qtile_settings.get("layout_border_with", 2)*general_width_scaling)
+# floating_border_width               = int(qtile_settings.get("layout_border_with", 3)*general_width_scaling)
 
 #*#############################
 #*           FONTS           ##
 #*#############################
 normal_font                         = "FiraCode Nerd Font"
+apple_font                          = "San Francisco"
+apple_font_bold                     = "San Francisco bold"
 bold_font                           = "FiraCode Nerd Font Bold"
 icon_font                           = "Font Awesome 6 Free Solid"
 other_font                          = "ttf-dejavu"
