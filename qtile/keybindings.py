@@ -1,7 +1,7 @@
 from functions import (
     move_focus_and_mouse, spawn_alttab_once, check, notify,
     close_all_windows, mute_or_unmute, show_or_hide_tabs, 
-    hide_bottom_bar, minimize_windows, swap_screens
+    minimize_windows, swap_screens
 )
 from libqtile.config import Key, KeyChord, Click, Drag
 from libqtile.lazy import lazy
@@ -38,7 +38,7 @@ keys = [
         Key([mod], "Down", lazy.screen.prev_group(), desc='Next group left'),
 
         #--[WINDWOW CONTROLS]--#
-        # Key(["mod1", "shift"], "d", hide_bottom_bar(), desc='Hide bottom bar'),
+        Key(["control", "shift"], "d", lazy.hide_show_bar("bottom"), desc='Hides the bottom bar'),
         Key([mod, "shift"], "h", minimize_windows(), desc="minimize/unminimize windows"),
         Key([mod], "Left", lazy.layout.down(), desc='Move focus down in current stack pane'),
         Key([mod], "Right", lazy.layout.up(), desc='Move focus up in current stack pane'),
@@ -61,7 +61,7 @@ keys = [
         Key([mod], "minus", lazy.spawn("python3 /home/jonalm/scripts/qtile/bar_menus/wifi/wifi_menu.py"), desc='wifi'),
 
         #--[URLS]--#
-        Key([mod], "y", move_focus_and_mouse("c"), lazy.group["c"].toscreen(), lazy.spawn("firefox youtube.com"), desc='Youtube'),
+        Key([mod], "y", move_focus_and_mouse("c"), lazy.group["c"].toscreen(), lazy.spawn("vivaldi youtube.com"), desc='Youtube'),
 
         #--[TERM]--#
         Key([mod], "h", move_focus_and_mouse("n"), lazy.group["n"].toscreen(), check(from_key_press=["htop", "3", "alacritty --title Htop -e"]), desc='Htop'),
@@ -71,7 +71,7 @@ keys = [
         Key([mod], "space", lazy.spawn("/home/jonalm/.config/rofi/files/launchers/apps/launcher.sh"), desc='Rofi drun'),
         Key([mod], "w", lazy.spawn("/home/jonalm/scripts/rofi/config/config_files.sh"), desc='Rofi config files'),
         Key([mod], "l", lazy.spawn("/home/jonalm/scripts/rofi/search/search_web.sh"), desc='Rofi web search'),
-        Key([mod], "k", lazy.spawn(home + "/scripts/rofi/automation/laptop_version/main/automation.sh") if laptop else lazy.spawn(home + "/scripts/rofi/automation/desktop_version/main/automation.sh"), desc='Rofi automation scripts'),
+        Key([mod], "k", lazy.spawn(HOME + "/scripts/rofi/automation/laptop_version/main/automation.sh") if laptop else lazy.spawn(HOME + "/scripts/rofi/automation/desktop_version/main/automation.sh"), desc='Rofi automation scripts'),
 #- KEYS_END
 ]
 

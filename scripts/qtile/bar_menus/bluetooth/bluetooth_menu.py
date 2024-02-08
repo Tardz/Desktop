@@ -6,10 +6,12 @@ from gi.repository import Gtk, Gdk, GLib
 from multiprocessing import Process, Value
 from Xlib import display 
 from Xlib.ext import randr
-import time
-import signal
-import json
+from background_process import BackgroundProcess
 import pulsectl
+import signal
+import time
+import json
+import sys
 
 class OptionWindow(Gtk.Dialog):
     def __init__(self, parent, main_window, device, active_widget):
@@ -244,11 +246,15 @@ class OptionWindow(Gtk.Dialog):
         self.destroy()
 
 class BluetoothMenu(Gtk.Window):
-    def __init__(self, pid_file_path, bluetooth_process):
+    def __init__(self, pid_file_path):
         Gtk.Window.__init__(self, title="Bluetooth menu")
 
-        self.bluetooth_process = bluetooth_process
+        self.bluetooth_process_instance = BackgroundProcess()
+        self.process = Process(target=self.bluetooth_process_instance.bluetooth_process)
+        self.process.start()
+
         signal.signal(signal.SIGTERM, self.handle_sigterm)
+        self.singal_file_path = os.path.expanduser("~/scripts/qtile/bar_menus/bluetooth/signal_data.txt")
 
         x, y = self.get_mouse_position()
 
@@ -264,6 +270,7 @@ class BluetoothMenu(Gtk.Window):
             self.set_size_request(self.window_width, 20)
 
         self.pid_file_path = pid_file_path
+        self.hidden = False
         self.ignore_focus_lost = False
         self.previous_css_class = None
         self.active_widget = None
@@ -370,7 +377,7 @@ class BluetoothMenu(Gtk.Window):
         scrolled_window.add(self.list)  
         self.list_box.pack_start(scrolled_window, True, True, 0)
 
-        GLib.timeout_add(6000, self.update_ui_with_devices)
+        self.update_devices_timeout = GLib.timeout_add(6000, self.update_ui_with_devices)
         self.main_box.pack_start(self.list_box, True, True, 0)
 
     def create_list_options(self):
@@ -755,7 +762,7 @@ class BluetoothMenu(Gtk.Window):
         return devices
     
     def get_known_devices(self):
-        known_devices_output = subprocess.check_output("bluetoothctl devices Trusted", shell=True).decode("utf-8")
+        known_devices_output = subprocess.check_output("bluetoothctl devices", shell=True).decode("utf-8")
         known_devices = []
 
         if known_devices_output:
@@ -930,7 +937,7 @@ class BluetoothMenu(Gtk.Window):
 
             
             complete_devices.sort(key=lambda x: (not x["CONNECTED"], not x["DEVICE-KNOWN"]))
-
+            pulse.close()
             return complete_devices
 
     def update_ui_with_devices(self, get_known=False):
@@ -995,17 +1002,29 @@ class BluetoothMenu(Gtk.Window):
 
                 device_type = device["DEVICE-TYPE"] 
                 if device_type == "audio-headphones-bluetooth":
-                    icon.set_name("list-icon-headphone")
                     icon.set_text("")
+                    if device["CONNECTED"]:
+                        icon.set_name("list-icon-headphone-active")
+                    else:
+                        icon.set_name("list-icon-headphone-inactive")
                 elif device_type == "audio-card-pci":
-                    icon.set_name("list-icon-speaker")
                     icon.set_text("")
+                    if device["CONNECTED"]:
+                        icon.set_name("list-icon-speaker-active")
+                    else:
+                        icon.set_name("list-icon-speaker-inactive")
                 elif device_type == "audio-card-usb":
-                    icon.set_name("list-icon-headphone")
                     icon.set_text("")
+                    if device["CONNECTED"]:
+                        icon.set_name("list-icon-headphone-active")
+                    else:
+                        icon.set_name("list-icon-headphone-inactive")
                 else:
-                    icon.set_name("list-icon-unknown")
                     icon.set_text("?")
+                    if device["CONNECTED"]:
+                        icon.set_name("list-icon-unknown-active")
+                    else:
+                        icon.set_name("list-icon-unknown-inactive")
 
                 battery_percentage = device["BATTERY"]
                 if battery_percentage:
@@ -1068,7 +1087,7 @@ class BluetoothMenu(Gtk.Window):
 
     def on_focus_out(self, widget, event):
         if not self.ignore_focus_lost:
-            self.exit_remove_pid()
+            self.hide_menu()
 
     def on_escape_press(self, widget, event):
         keyval = event.keyval
@@ -1076,85 +1095,92 @@ class BluetoothMenu(Gtk.Window):
             self.on_focus_out(widget, event)
 
     def handle_sigterm(self, signum, frame):
-        self.exit_remove_pid() 
+        with open(self.singal_file_path, "r") as file:
+            signal_arg = file.read()
+            with open(self.singal_file_path, "w") as file:
+                file.write("")
 
-    def exit_remove_pid(self):
+            if signal_arg == "hide":
+                self.hide_menu()
+            elif signal_arg == "kill":
+                GLib.idle_add(Gtk.main_quit)  
+
+    def hide_menu(self):
         try:
-            if self.bluetooth_process.is_alive():
-                self.bluetooth_process.terminate()
-                self.bluetooth_process.join() 
-            with open(self.pid_file_path, "r") as file:
-                pid = int(file.read().strip())
-            try:
+            if self.hidden:
+                # self.process = Process(target=self.bluetooth_process_instance.bluetooth_process)
+                # self.process.start()
+                self.update_devices_timeout = GLib.timeout_add(6000, self.update_ui_with_devices)
+                self.ignore_focus_lost = False
+                self.hidden = False
+                self.show()
+            else:
+                # if self.process.is_alive():
+                #     self.process.terminate()
+                #     self.process.join() 
+                    
+                GLib.source_remove(self.update_devices_timeout)
+
+                self.ignore_focus_lost = True
+                self.hidden = True
                 subprocess.run("qtile cmd-obj -o widget bluetoothicon -f unclick", shell=True)
-                os.remove(self.pid_file_path)
-                os.kill(pid, 15)
-            except ProcessLookupError:
-                pass
-        finally:
-            exit(0)
+                self.hide()
 
-def scan_devices():
-    subprocess.run("bluetoothctl --timeout 10 scan on", shell = True)
-    output = subprocess.check_output("hcitool scan", shell = True).decode("utf-8")
-    return output
+        except Exception as e:
+            print(f"Error occurred: {e}")
 
-def get_bluetooth_on():
+def write_pid_to_settings_data(pid, json_file_path):
     try:
-        bluetooth_state = subprocess.check_output("systemctl status bluetooth | grep Running", shell=True, stderr=subprocess.PIPE, text=True).strip()
-        if "Running" in bluetooth_state:
-            return True
-        else:
-            return False
-    except subprocess.CalledProcessError as e:
-        return False
-    
-def bluetooth_process():
-    while True:
-        if get_bluetooth_on():
-            bluetooth_output = scan_devices()
-            if bluetooth_output:
-                lines = bluetooth_output.splitlines()
-                unique_devices = []
+        with open(json_file_path, 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {}
 
-                for line in lines[1:]:
-                    parts = line.split("\t", 2)
-                    parts.pop(0)
+    data['bluetooth_menu_pid'] = pid
 
-                    device_name = parts[1]
-                    device_addr = parts[0]
+    with open(json_file_path, 'w') as file:
+        json.dump(data, file, indent=4)
 
-                    if device_name != "n/a":
-                        unique_devices.append({"DEVICE": device_name, "MAC-ADDR": device_addr})
-            
-            with open('/home/jonalm/scripts/qtile/bar_menus/bluetooth/bluetooth_devices.json', 'w') as json_file:
-                json.dump(unique_devices, json_file, indent=2)
+    subprocess.run("qtile cmd-obj -o widget bluetoothicon -f update_menu_pid", shell=True)
+
+def remove_pid_from_settings_data(json_file_path):
+    try:
+        with open(json_file_path, 'r') as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {}
+
+    data['bluetooth_menu_pid'] = None
+
+    with open(json_file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
+    subprocess.run("qtile cmd-obj -o widget bluetoothicon -f update_menu_pid", shell=True)
 
 if __name__ == '__main__':
-    pid_file_path = "/home/jonalm/scripts/qtile/bar_menus/bluetooth/bluetooth_menu_pid_file.pid"
+    pid_file_path = os.path.expanduser("~/scripts/qtile/bar_menus/bluetooth/bluetooth_menu_pid_file.pid")
+    json_file_path = os.path.expanduser("~/settings_data/processes.json")
     dialog = None
 
     try:
-        if os.path.isfile(pid_file_path):
-            with open(pid_file_path, "r") as file:
-                pid = int(file.read().strip())
-            try:
-                subprocess.run("qtile cmd-obj -o widget bluetoothicon -f unclick", shell=True)
-                os.remove(pid_file_path)
-                os.kill(pid, 15)            
-            except ProcessLookupError:
-                pass
-        else:
-            with open(pid_file_path, "w") as file:
-                file.write(str(os.getpid()))
-
-            process = Process(target=bluetooth_process)
-            process.start()
+        if not os.path.isfile(pid_file_path):
+            pid = os.getpid()
+            write_pid_to_settings_data(pid, json_file_path)
             
-            dialog = BluetoothMenu(pid_file_path, process)
+            with open(pid_file_path, "w") as file:
+                file.write(str(pid))
+            
+            dialog = BluetoothMenu(pid_file_path)
             Gtk.main()
+        else:
+            print("Another instance of this menu is already active.")
                     
     except Exception as e:
         print(f"An error occurred: {e}")
+
     finally:
-        exit(0)
+        if dialog:
+            dialog.destroy()
+            remove_pid_from_settings_data(json_file_path)
+            os.remove(pid_file_path)
+        sys.exit(0)

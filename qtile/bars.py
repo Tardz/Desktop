@@ -7,27 +7,71 @@ from widgets import (
     BacklightIcon, BacklightWidget, ClockWidget, AppTrayIcon, 
     ActiveWindowOptionWidget, ActiveWindowIcon, ActiveWindowWidget, 
     NothingWidget, GroupBoxWidget, WindowCountWidget, seperator, 
-    task_list_settings
+    task_list_settings, LaunchTray, AppTraySeperator, ClockIcon,
+    MenuIcon
 )
 from qtile_extras import widget
 from libqtile.bar import Bar
 from libqtile import bar
 from settings import *
 
-
-box_style_single_top_bar = Bar([
-    # POWERBUTTON # 
-    seperator(-3),
-    PowerButton(),
-
-    # LAYOUTICON # 
+### Single monitor ###
+simple_style_1_single_top_bar = Bar([
+    seperator(-12),
+    GroupBoxWidget(),
     seperator(),
-    LayoutIcon(),
 
-    # TICKTICK MENU #
+    seperator(250),
+    widget.Spacer(bar.STRETCH),
+    # ActiveWindowIcon(),
+    ActiveWindowWidget(),
+
+    # BLUETOOTH #
+    BluetoothIcon(),
     seperator(),
-    TickTickMenu(),
 
+    # VOLUME #
+    VolumeIcon(),
+    seperator(),
+
+    #  WIFI #
+    WifiIcon(),
+
+    # CPU LOAD #
+    seperator(),
+    CpuLoadIcon(),
+    
+    # CPU TEMP #
+    seperator(),
+    CpuTempIcon(),
+
+    # URGENT NOTIFICATION #
+    seperator(),
+    NotificationIcon(),
+
+    # BACKLIGHT #
+    seperator(),
+    BacklightIcon(),
+
+    # BATTERY #
+    seperator(10),
+    BatteryIconWidget(),
+
+    # TIME #
+    seperator(8),
+    ClockWidget(decor_color=transparent),
+    seperator(-12),
+
+], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
+
+simple_style_2_single_top_bar = Bar([
+    seperator(-6),
+    ClockWidget(decor_color=transparent),
+    seperator(-12),
+    GroupBoxWidget(),
+    seperator(),
+
+    # ClockIcon(),
     widget.Spacer(bar.STRETCH),
 
     # BLUETOOTH #
@@ -44,196 +88,93 @@ box_style_single_top_bar = Bar([
     WifiIcon(),
     WifiWidget(),
 
-    # CPU TEMP #
-    seperator(),
-    CpuTempIcon(),
-    CpuTempWidget(),
+    # TICKTICK #
+    # seperator(),
+    # TickTickMenu(),
 
     # CPU LOAD #
     seperator(),
     CpuLoadIcon(),
     CpuLoadWidget(),
-
-    # BATTERY #
-    seperator(),
-    BatteryIcon(),
-    BatteryIconWidget(decor=True),
 
     # WATTAGE #
     seperator(),
     WattageIcon(),
     WattageWidget(),
 
+    # BATTERY #
+    seperator(),
+    BatteryIcon(),
+    BatteryWidget(),
+
     # URGENT NOTIFICATION #
     seperator(),
     NotificationIcon(),
-    NotificationWidget(),
 
     # BACKLIGHT #
     seperator(),
     BacklightIcon(),
     BacklightWidget(),
 
-    # TIME #
     seperator(),
-    ClockWidget(),
-    seperator(-5),
-
-], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
-
-box_style_single_bottom_bar = Bar([
-    # GROUPBOX #
-    GroupBoxWidget(),
-    
-    # TASKLIST #
-    seperator(background=transparent),
-    widget.TaskList(**task_list_settings),
-
-    # APPS #
-    seperator(background=transparent),
-    AppTrayIcon("", app_tray_icon_color_1, ["firefox", "c", ""]),
-    AppTrayIcon("", app_tray_icon_color_2, ["code", "v", ""]),
-    AppTrayIcon("", app_tray_icon_color_3, ["pcmanfm", "n", ""]),
-    AppTrayIcon("", app_tray_icon_color_4, launch="spotify"),
-    AppTrayIcon(" ", app_tray_icon_color_5, launch="python3 ~/scripts/qtile/settings_menu/app/settings_menu.py"),
-
-], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
-
-box_style_dual_top_bar_1 = Bar([
-    widget.Spacer(bar.STRETCH),
-    
-    # BLUETOOTH #
-    BluetoothIcon(),
-    BluetoothWidget(),
-    
-    # VOLUME #
-    seperator(),
-    VolumeIcon(),
-    VolumeWidget(),
-
-    #  WIFI #
-    seperator(),
-    WifiIcon(),
-    WifiWidget(),
-
-    # CPU TEMP #
-    seperator(),
-    CpuTempIcon(),
-    CpuTempWidget(),
-
-    # CPU LOAD #
-    seperator(),
-    CpuLoadIcon(),
-    CpuLoadWidget(),
-
-    # BATTERY #
-    seperator() if laptop else NothingWidget(),
-    BatteryIcon() if laptop else NothingWidget(),
-    BatteryWidget() if laptop else NothingWidget(),
-
-    # WATTAGE #
-    seperator() if laptop else NothingWidget(),
-    WattageIcon() if laptop else NothingWidget(),
-    WattageWidget() if laptop else NothingWidget(),
-
-    # URGENT NOTIFICATION #
-    seperator(),
-    NotificationIcon(),
-    NotificationWidget(),
-
-    # BACKLIGHT #
-    seperator() if laptop else NothingWidget(),
-    BacklightIcon() if laptop else NothingWidget(),
-    BacklightWidget() if laptop else NothingWidget(),
+    MenuIcon(),
 
     # TIME #
-    seperator(),
-    ClockWidget(),
-    seperator(),
+    seperator(-6),
 
 ], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
 
-box_style_dual_top_bar_2 = Bar([
-    # POWERBUTTON #
-    seperator(),
-    PowerButton(),
+simple_style_single_bottom_bar = Bar([
+    # APPTRAY #
+    # AppTrayIcon("libreoffice-calc", "m", "libreoffice --calc"),
+    # AppTrayIcon("libreoffice-writer", "m", "libreoffice --writer"),
+    # AppTraySeperator(),
+    AppTrayIcon("vscode", "v", "code"),
+    AppTrayIcon("android-studio", "v", "android-studio"),
+    AppTrayIcon("discord", "d", "discord"),
+    AppTrayIcon("youtube", "c", "vivaldi youtube.com"),
+    AppTrayIcon("vivaldi", "c", "vivaldi"),
+    AppTrayIcon("file-manager", "n", "pcmanfm"),
+    AppTraySeperator(),
+    AppTrayIcon("system-run", "", "python3 " + os.path.expanduser("~/scripts/qtile/settings_menu/app/settings_menu.py")),
+    AppTrayIcon("spotify", "", "spotify"),
+    AppTrayIcon("alacritty", "", "alacritty"),
+    AppTrayIcon("ticktick", "", "ticktick"),
+    AppTraySeperator(),
+    AppTrayIcon("codeblocks", "", HOME + "/.config/rofi/files/launchers/apps/launcher.sh"),
+    AppTrayIcon("codium", "", HOME + "/scripts/rofi/config/config_files.sh"),
+    AppTrayIcon("automation", "", HOME + "/scripts/rofi/automation/laptop_version/main/automation.sh"),
+    AppTrayIcon("search", "", HOME + "/scripts/rofi/search/search_web.sh"),
 
-    # LAYOUTICON #
-    seperator(),
-    LayoutIcon(),
+], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
 
-    # TICKTICK MENU #
+### Dual monitor ###
+simple_style_1_dual_top_bar_1 = Bar([
+    # GROUPBOX #
+    seperator(-8),
+    GroupBoxWidget(
+        visible_groups = ["c", "m", "n"]
+    ),
     seperator(),
-    TickTickMenu(),
 
+    seperator(410),
     widget.Spacer(bar.STRETCH),
-
-], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
-
-box_style_dual_bottom_bar_1 = Bar([
-    # APPS #
-    AppTrayIcon("", icon_background_2, ["firefox", "c", ""]),
-    AppTrayIcon("", icon_background_3, ["code", "v", ""]),
-    AppTrayIcon("", icon_background_7, ["pcmanfm", "n", ""]),
-    AppTrayIcon("", icon_background_8, launch="spotify"),
-    AppTrayIcon(" ", icon_background_9, launch="~/scripts/qtile/settings_menu/app/settings_menu.py"),
-
-    # WINDOWCOUNT #
-    seperator(background=transparent),
-    WindowCountWidget(),
-
-    # TASKLIST #
-    seperator(background=transparent),
-    widget.TaskList(**task_list_settings),
-
-    # GROUPBOX #
-    seperator(background=transparent),
-    GroupBoxWidget(),
-
-], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
-
-box_style_dual_bottom_bar_2 = Bar([
-    # GROUPBOX #
-    GroupBoxWidget(),
-
-    # TASKLIST #
-    seperator(background=transparent),
-    widget.TaskList(**task_list_settings),
-
-    # WINDOWCOUNT #
-    seperator(background=transparent),
-    WindowCountWidget(),
-
-    # APPS #
-    seperator(background=transparent),
-    AppTrayIcon("", icon_background_2, ["firefox", "c", ""]),
-    AppTrayIcon("", icon_background_3, ["code", "v", ""]),
-    AppTrayIcon("", icon_background_7, ["pcmanfm", "n", ""]),
-    AppTrayIcon("", icon_background_8, launch="spotify"),
-    AppTrayIcon(" ", icon_background_9, launch="python3 /home/jonalm/scripts/qtile/settings_menu/app"),
-
-], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
-
-simple_style_single_top_bar = Bar([
-    ActiveWindowIcon(),
+    
+    # ActiveWindowIcon(),
     ActiveWindowWidget(),
-    # ActiveWindowOptionWidget("File"),
-    # ActiveWindowOptionWidget("Edit"),
-    # ActiveWindowOptionWidget("View"),
-    # ActiveWindowOptionWidget("Go"),
-    # ActiveWindowOptionWidget("Window"),
 
     widget.Spacer(bar.STRETCH),
 
     # BLUETOOTH #
-    BluetoothIcon(),
     seperator(),
+    BluetoothIcon(),
 
     # VOLUME #
-    VolumeIcon(),
     seperator(),
+    VolumeIcon(),
 
     #  WIFI #
+    seperator(),
     WifiIcon(),
 
     # TICKTICK #
@@ -241,113 +182,155 @@ simple_style_single_top_bar = Bar([
     # TickTickMenu(),
 
     # CPU LOAD #
-    # seperator(),
-    # CpuLoadIcon(),
+    seperator(),
+    CpuLoadIcon(),
+
+    # CPU TEMP #
+    seperator(),
+    CpuTempIcon(),
 
     # URGENT NOTIFICATION #
     seperator(),
     NotificationIcon(),
 
     # BACKLIGHT #
-    seperator(),
-    BacklightIcon(),
+    seperator() if laptop else NothingWidget(), 
+    BacklightIcon() if laptop else NothingWidget(),
 
     # BATTERY #
-    seperator(),
-    BatteryIconWidget(),
+    seperator() if laptop else NothingWidget(),
+    BatteryIcon() if laptop else NothingWidget(),
 
     # TIME #
-    seperator(22),
     ClockWidget(decor_color=transparent),
-    seperator(4),
+    seperator(-8),
+], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
+
+simple_style_1_dual_top_bar_2 = Bar([
+    seperator(425),
+    widget.Spacer(bar.STRETCH),
+    ActiveWindowWidget(),
+    widget.Spacer(bar.STRETCH),
+
+    # GROUPBOX #
+    seperator(),
+    # widget.Spacer(bar.STRETCH),
+    GroupBoxWidget(
+        visible_groups = ["v", "d", "g"]
+    ),
+    seperator(-9),
 
 ], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
 
-simple_style_single_bottom_bar = Bar([
+simple_style_2_dual_top_bar_1 = Bar([
     # GROUPBOX #
-    # GroupBoxWidget(),
-    
-    # TASKLIST #
-    widget.TaskList(**task_list_settings),
-    seperator(background=transparent),
-    
-    # APPTRAY #
-    AppTrayIcon("", app_tray_icon_color_1, ["firefox", "c", ""]),
-    AppTrayIcon("", app_tray_icon_color_2, ["code", "v", ""]),
-    AppTrayIcon("", app_tray_icon_color_3, ["pcmanfm", "n", ""]),
-    AppTrayIcon("", app_tray_icon_color_4, launch="spotify"),
-    AppTrayIcon(" ", app_tray_icon_color_5, launch="python3 ~/scripts/qtile/settings_menu/app/settings_menu.py"),
-
-], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
-
-simple_style_dual_top_bar_1 = Bar([
+    seperator(-9),
+    GroupBoxWidget(
+        visible_groups = ["c", "m", "n"]
+    ),
+    seperator(),
     widget.Spacer(bar.STRETCH),
 
-     # BLUETOOTH #
-    BluetoothIcon(),
+    # BLUETOOTH #
     seperator(),
+    BluetoothWidget(),
+    BluetoothIcon(),
 
     # VOLUME #
-    VolumeIcon(),
     seperator(),
+    VolumeIcon(),
+    VolumeWidget(),
 
     #  WIFI #
+    seperator(),
     WifiIcon(),
+    WifiWidget(),
+
+    # TICKTICK #
+    # seperator(),
+    # TickTickMenu(),
+
+    # CPU LOAD #
+    seperator(),
+    CpuLoadIcon(),
+    CpuLoadWidget(),
+
+    # CPU TEMP #
+    seperator(),
+    CpuTempIcon(),
+    CpuTempWidget(),
 
     # URGENT NOTIFICATION #
     seperator(),
     NotificationIcon(),
 
-    # TIME #
-    seperator(),
-    ClockWidget(decor_color=transparent),
-    seperator(4),
+    # BACKLIGHT #
+    seperator() if laptop else NothingWidget(), 
+    BacklightIcon() if laptop else NothingWidget(),
+    BacklightWidget() if laptop else NothingWidget(),
 
+    # BATTERY #
+    seperator() if laptop else NothingWidget(),
+    BatteryIcon() if laptop else NothingWidget(),
+    BatteryWidget() if laptop else NothingWidget(),
+
+    # MENU #
+    seperator(),
+    MenuIcon(),
+    seperator(-4),
 ], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
 
-simple_style_dual_top_bar_2 = Bar([
-    ActiveWindowIcon(),
-    ActiveWindowWidget(),
-
+simple_style_2_dual_top_bar_2 = Bar([
+    # TIME #
+    seperator(-4),
+    ClockWidget(decor_color=transparent),
     widget.Spacer(bar.STRETCH),
+
+    # GROUPBOX #
+    seperator(),
+    widget.Spacer(bar.STRETCH),
+    GroupBoxWidget(
+        visible_groups = ["v", "d", "g"]
+    ),
+    seperator(-9),
 
 ], top_bar_size, margin = bar_margin_top, background = bar_background_color, border_width = bar_width_top, border_color = bar_border_color, opacity=1)
 
 simple_style_dual_bottom_bar_1 = Bar([
-    # GROUPBOX #
-    # GroupBoxWidget(),
-    
-    # TASKLIST #
-    widget.TaskList(**task_list_settings),
-    seperator(background=transparent),
-    
     # APPTRAY #
-    AppTrayIcon("", app_tray_icon_color_1, ["firefox", "c", ""]),
-    AppTrayIcon("", app_tray_icon_color_2, ["code", "v", ""]),
-    AppTrayIcon("", app_tray_icon_color_3, ["pcmanfm", "n", ""]),
-    AppTrayIcon("", app_tray_icon_color_4, launch="spotify"),
-    AppTrayIcon(" ", app_tray_icon_color_5, launch="python3 ~/scripts/qtile/settings_menu/app/settings_menu.py"),
+    # AppTrayIcon("libreoffice-calc", "m", "libreoffice --calc"),
+    # AppTrayIcon("libreoffice-writer", "m", "libreoffice --writer"),
+    # AppTraySeperator(),
+    AppTrayIcon("codeblocks", "", HOME + "/.config/rofi/files/launchers/apps/launcher.sh"),
+    AppTrayIcon("codium", "", HOME + "/scripts/rofi/config/config_files.sh"),
+    AppTrayIcon("automation", "", HOME + "/scripts/rofi/automation/laptop_version/main/automation.sh"),
+    AppTrayIcon("search", "", HOME + "/scripts/rofi/search/search_web.sh"),
+    AppTraySeperator(),
+    AppTrayIcon("discord", "d", "discord"),
+    AppTrayIcon("youtube", "c", "firefox youtube.com"),
+    AppTrayIcon("vivaldi", "c", "vivaldi"),
+    AppTrayIcon("file-manager", "n", "pcmanfm"),
+    AppTraySeperator(),
+    AppTrayIcon("system-run", "", "python3 " + os.path.expanduser("~/scripts/qtile/settings_menu/app/settings_menu.py")),
+    AppTrayIcon("spotify", "", "spotify"),
+    AppTrayIcon("alacritty", "", "alacritty"),
+    AppTrayIcon("ticktick", "", "ticktick"),
 
-], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
+], bottom_bar_size, margin = bar_1_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
 
 simple_style_dual_bottom_bar_2 = Bar([
-    # GROUPBOX #
-    GroupBoxWidget(),
-
-    # TASKLIST #
-    seperator(background=transparent),
-    widget.TaskList(**task_list_settings),
-
-    # WINDOWCOUNT #
-    seperator(background=transparent),
-    WindowCountWidget(),
-
-    # APPS #
-    seperator(background=transparent),
-    AppTrayIcon("", icon_background_2, ["firefox", "c", ""]),
-    AppTrayIcon("", icon_background_3, ["code", "v", ""]),
-    AppTrayIcon("", icon_background_7, ["pcmanfm", "n", ""]),
-    AppTrayIcon("", icon_background_8, launch="spotify"),
-    AppTrayIcon(" ", icon_background_9, launch="python3 /home/jonalm/scripts/qtile/settings_menu/app"),
-
-], bottom_bar_size, margin = bar_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
+    # APPTRAY #
+    # AppTrayIcon("file-manager", "n", "pcmanfm"),
+    AppTrayIcon("system-run", "", "python3 " + os.path.expanduser("~/scripts/qtile/settings_menu/app/settings_menu.py")),
+    AppTrayIcon("spotify", "", "spotify"),
+    AppTrayIcon("alacritty", "", "alacritty"),
+    AppTrayIcon("ticktick", "", "ticktick"),
+    AppTraySeperator(),
+    AppTrayIcon("vscode", "v", "code"),
+    AppTrayIcon("android-studio", "v", "android-studio"),
+    AppTraySeperator(),
+    AppTrayIcon("codeblocks", "", HOME + "/.config/rofi/files/launchers/apps/launcher.sh"),
+    AppTrayIcon("codium", "", HOME + "/scripts/rofi/config/config_files.sh"),
+    AppTrayIcon("automation", "", HOME + "/scripts/rofi/automation/laptop_version/main/automation.sh"),
+    AppTrayIcon("search", "", HOME + "/scripts/rofi/search/search_web.sh"),
+], bottom_bar_size, margin = bar_2_margin_bottom, background = bar_background_color, border_width = bar_width_bottom, border_color = bar_border_color, opacity=1)
